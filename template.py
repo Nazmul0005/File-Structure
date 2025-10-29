@@ -21,6 +21,7 @@ list_of_files=[
     "docker-compose.yml",
     ".env",
     "README.md",
+    ".gitignore",
     
 ]
 
@@ -37,4 +38,5 @@ for filepath in list_of_files:
             pass
 
     else:
+
         print(f"File already exists : {filepath}")
