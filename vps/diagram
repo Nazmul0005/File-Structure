@@ -1,0 +1,78 @@
+          ┌─────────────┐
+          │   Client    │
+          │ (Browser /  │
+          │   API call) │
+          └─────┬───────┘
+                │ HTTP/HTTPS
+                ▼
+          ┌─────────────┐
+          │    Nginx    │
+          │ (Reverse    │
+          │  Proxy)     │
+          └─────┬───────┘
+                │ Proxy Pass
+                ▼
+          ┌─────────────┐
+          │   Gunicorn  │
+          │ (Master +   │
+          │  Uvicorn    │
+          │  Workers)   │
+          └─────┬───────┘
+                │ WSGI / ASGI
+                ▼
+          ┌─────────────┐
+          │  FastAPI    │
+          │   App       │
+          └─────┬───────┘
+                │ Logs & Health
+       ┌─────────────┴─────────────┐
+       │                           │
+ ┌─────────────┐             ┌─────────────┐
+ │ Logs Volume │             │ /health     │
+ │ (app_logs)  │             │ Endpoint    │
+ └─────────────┘             └─────────────┘
+
+
+
+
+
+
+
+
+Explanation
+
+Client → Nginx
+
+External requests come to your VPS on a public port (e.g., 3013)
+
+Nginx acts as a reverse proxy, forwarding requests to the app container
+
+Nginx → Gunicorn
+
+Nginx forwards traffic to Gunicorn inside the app container
+
+Gunicorn manages multiple Uvicorn workers for concurrency
+
+Gunicorn → FastAPI
+
+Workers handle the async requests via ASGI
+
+All requests are processed by your FastAPI app
+
+Logs & Health
+
+Logs are written to /app/logs → persisted in Docker named volume app_logs
+
+/health endpoint is monitored by Docker healthcheck → auto-restart if unhealthy
+
+✅ Key Features Illustrated
+
+Non-root user → safer app container
+
+Multi-stage Dockerfile → smaller image, clean dependencies
+
+Healthchecks → resilience
+
+Persistent logs → volume
+
+Nginx → reverse proxy, configurable timeouts, and /health routing
