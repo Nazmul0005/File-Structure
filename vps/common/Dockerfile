@@ -71,3 +71,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run Gunicorn with Uvicorn workers using external config
 CMD ["gunicorn", "PROJECT_ENTRY_POINT:app", "-c", "/app/gunicorn.conf.py"]
+
+#for uvicorn: 
+# CMD ["uvicorn", "com.mhire.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
